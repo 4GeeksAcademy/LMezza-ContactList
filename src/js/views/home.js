@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../component/card";
 
@@ -6,7 +6,7 @@ import "../../styles/home.css";
 
 
 export const Home = () => {
-	//const [contacto, setContacto] = useState([])
+	const [contacto, setContacto] = useState([])
 
 	//Esta funcion obtiene la lista de contactos de la agenda
 	async function listaContactos() {
@@ -21,7 +21,7 @@ export const Home = () => {
 				CrearAgenda();
 			}
 			let result = await response.json();
-			//console.log(result.contacts)
+			setContacto(result.contacts)
 		} catch (error) {
 			console.error(error);
 		};
@@ -39,31 +39,34 @@ export const Home = () => {
 				listaContactos();
 			}
 			let result = await response.json();
-			console.log(result)
+			setContacto(result)
 		} catch (error) {
 			console.error(error);
 		};
 	}
+
+	console.log(contacto);
+	
 
 	useEffect(() => {
 		listaContactos()
 	}, [])
 
 	return (
-		<div className="text-center mt-5 alaing-content-center">
-			<h1>Lista de contactos</h1>
-			<Link to="/addContact">Add contact</Link>
-			<Card/>
+		<div className="container">
+			<h1 className="text-center mt-5">Lista de contactos</h1>
+			<Link className="d-flex justify-content-end" to="/addContact"><button className="btn btn-primary">Add contact</button></Link>
+			
+			{/* <Card/> */}
 
 			
 			
 			
-			{/* <ul className="my-2 p-0 d-flex justify-content-between">
-				Crear con map lista
+			<ul className="my-2 p-0 d-flex justify-content-between">
 				<div className="list-group">
-					{contacto.length > 0 ? contacto.map((item) => <li className="list-group-item" key={item.id}>{item.name}{item.phone}{item.email}{item.address}</li>) : null}
+					{contacto.length > 0 ? contacto.map((item) => <Card className="" key={item.id}>{item.name}{item.phone}{item.email}{item.address}</Card>) : null}
 				</div>
-			</ul> */}
+			</ul>
 
 
 		</div>

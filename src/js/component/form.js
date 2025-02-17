@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+
 
 import "../../styles/form.css";
 
-export const Form = (setContact) => {
-
+export const Form = () => {
+  const [contact, setContact] = useState([""])
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [address, setAddress] = useState("")
-
+  
 
   async function createContact() {
     if (name === "" || email === "" || phone === "" || address === "") {
-      alert("Contacto no creado. Complete todos los campos de manera correcta");
+      throw new Error("Contacto no creado. Complete todos los campos de manera correcta");
     } else {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -77,9 +77,6 @@ export const Form = (setContact) => {
           <input className="form-control" id="address" type="text" value={address} onChange={(e) => { setAddress(e.target.value) }} />
         </div>
         <button type="button" className="btn btn-primary btn-lg m-1 justify-content-center w-100" onClick={save}>Save</button>
-        <Link to="/" className="d-flex">
-          or get back to contacts
-        </Link>
       </form>
     </div>
   )

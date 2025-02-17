@@ -3,22 +3,21 @@ import { Link } from "react-router-dom";
 
 
 
-export const Card = () => {
+export const Card = (Contacto) => {
     return (
-        <div className="card mb-3" style={{ maxWidth: "540px" }}>
+        <div className="card my-3" style={{ maxHeight: "320px" }}>
             <div className="row g-0">
-                <div className="col-md-4">
-                    <img src="https://i.pinimg.com/236x/41/5b/77/415b776041f5fd0f89f174d02d19fdc7.jpg" className="card-img-top rounded-circle" alt="contact" />
+                <div className="col-md-2 m-auto px-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjZirTv3YUaHSe-VVIQzwXUHXxb8mnJ-krbg&s" className="border rounded-circle" style={{ maxHeight: "120px" }} alt="contact" />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-9">
                     <div className="card-body">
-                        <h5 className="card-title">Card title</h5>
+                        <h5 className="card-title">{Contacto.name}</h5>
                         <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
-                <div className="col-md-2">
-                    <div className="card-body-link">   
+                <div className="col-md-1">
+                    <div className="card-body-link d-flex justify-content-between mt-2 mx-3">   
                         <Link to="/addContact" className="btn btn-primary">E</Link>
                         <Link to="/addContact" className="btn btn-primary">D</Link>
                     </div>
