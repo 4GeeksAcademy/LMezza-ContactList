@@ -1,64 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../store/appContext";
+import { useParams } from "react-router";
 
 
 import "../../styles/form.css";
 
-export const Form = () => {
-  const [contact, setContact] = useState([""])
+export const Form = (props) => {
+  const { store, actions } = useContext(Context)
+  const params = useParams()
+  
+
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
   const [address, setAddress] = useState("")
-  
 
-  async function createContact() {
-    if (name === "" || email === "" || phone === "" || address === "") {
-      throw new Error("Contacto no creado. Complete todos los campos de manera correcta");
+  const saveContact = async () => {
+    if (props.pathname == '/add-contact') {
+      await actions.createContact(name, phone, email, address)
+      setName("");
+      setEmail("");
+      setPhone("");
+      setAddress("");
     } else {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      const raw = JSON.stringify({
-        "name": name,
-        "phone": phone,
-        "email": email,
-        "address": address
-      });
-
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow"
-      };
-
-      try {
-        let response = await fetch("https://playground.4geeks.com/contact/agendas/LMezza/contacts", requestOptions);
-        if (response === !201) {
-          alert("Contacto no creado")
-        }
-        let result = await response.json();
-        setContact=(result)
-        setName("")
-        setEmail("")
-        setPhone("")
-        setAddress("")
-      } catch (error) {
-        console.error(error);
-      };
+      const id = params.id
+      await actions.editContact(id, name, phone, email, address)
+      setName("");
+      setEmail("");
+      setPhone("");
+      setAddress("");
     }
   }
 
-  function save() {
-    createContact()
-  }
-
+  // let contacto = store.contact.find(contact => contact.id == params.id)
+  // console.log(contacto);
+  
   useEffect(() => {
-    createContact()
-  }, [])
+    if (props.pathname !== '/addContact' && Array.isArray(store.contact)) {
+        const contacto = store.contact.find(contact => contact.id == params.id);
+
+        if (contacto) {
+            setName(contacto.name || "");
+            setEmail(contacto.email || "");
+            setPhone(contacto.phone || "");
+            setAddress(contacto.address || "");
+        } else {
+            console.error("Contacto no encontrado con el id:", params.id);
+        }
+    }
+}, [props.pathname, store.contact]);
+
 
   return (
-    <div className="container">
+    <div className="container-reducido">
       <form>
         <div className="mb-3">
           <label htmlFor="fullName" className="form-label d-flex">Full Name</label>
@@ -76,7 +70,7 @@ export const Form = () => {
           <label htmlFor="address" className="form-label d-flex">Address</label>
           <input className="form-control" id="address" type="text" value={address} onChange={(e) => { setAddress(e.target.value) }} />
         </div>
-        <button type="button" className="btn btn-primary btn-lg m-1 justify-content-center w-100" onClick={save}>Save</button>
+        <button type="button" className="btn btn-primary btn-lg d-flex justify-content-center w-100" onClick={saveContact}>Save</button>
       </form>
     </div>
   )

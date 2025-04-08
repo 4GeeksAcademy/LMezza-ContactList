@@ -1,70 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../component/card";
+import { Context } from "../store/appContext";
 
 import "../../styles/home.css";
 
 
 export const Home = () => {
-	const [contacto, setContacto] = useState([])
 
-	//Esta funcion obtiene la lista de contactos de la agenda
-	async function listaContactos() {
-		const requestOptions = {
-			method: "GET",
-			redirect: "follow"
-		};
+	const { store, actions } = useContext(Context)
 
-		try {
-			let response = await fetch("https://playground.4geeks.com/contact/agendas/LMezza", requestOptions);
-			if (response.status === 404) {
-				CrearAgenda();
-			}
-			let result = await response.json();
-			setContacto(result.contacts)
-		} catch (error) {
-			console.error(error);
-		};
-	}
-
-	async function CrearAgenda() {
-		const requestOptions = {
-			method: "POST",
-			redirect: "follow"
-		};
-
-		try {
-			let response = await fetch("https://playground.4geeks.com/contact/agendas/LMezza", requestOptions);
-			if (response.status === 201) {
-				listaContactos();
-			}
-			let result = await response.json();
-			setContacto(result)
-		} catch (error) {
-			console.error(error);
-		};
-	}
-
-	console.log(contacto);
-	
 
 	useEffect(() => {
-		listaContactos()
+		actions.listaContactos()
 	}, [])
 
 	return (
-		<div className="container">
+		<div className="container-reducido">
 			<h1 className="text-center mt-5">Lista de contactos</h1>
 			<Link className="d-flex justify-content-end" to="/addContact"><button className="btn btn-primary">Add contact</button></Link>
 			
-			{/* <Card/> */}
-
-			
-			
-			
-			<ul className="my-2 p-0 d-flex justify-content-between">
+			<ul className="my-2 p-0 w-100">
 				<div className="list-group">
-					{contacto.length > 0 ? contacto.map((item) => <Card className="" key={item.id}>{item.name}{item.phone}{item.email}{item.address}</Card>) : null}
+					{store.contact.length > 0 ? store.contact.map((item) => <Card className="" key={item.id} id={item.id} name={item.name} phone={item.phone} email={item.email} address={item.address}/>) : "No contact add new one"}
 				</div>
 			</ul>
 
